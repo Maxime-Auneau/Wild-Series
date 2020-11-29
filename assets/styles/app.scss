@@ -1,0 +1,9 @@
+@import "~bootstrap/scss/bootstrap";
+
+$theme-colors: (
+"primary": green,
+"secondary": purple
+);
+body {
+    background-color: lightgrey;
+}
