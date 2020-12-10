@@ -3,7 +3,7 @@
 {% block header %}
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="/">Wild-Series</a>
-        <a class="navbar-brand" href="programs/">Programs</a>
-        <a class="navbar-brand" href="categories/">Category</a>
+        <a class="navbar-brand" href="{{ path('program_index') }}">Programs</a>
+        <a class="navbar-brand" href="{{ path('category_index') }}">Category</a>
     </nav>
 {% endblock %}
