@@ -30,10 +30,6 @@ class Category
      */
     private $programs;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $category_id;
     public function __construct()
     {
         $this->programs = new ArrayCollection();
@@ -88,18 +84,6 @@ class Category
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getCategoryId(): ?int
-    {
-        return $this->category_id;
-    }
-
-    public function setCategoryId(int $category_id): self
-    {
-        $this->category_id = $category_id;
 
         return $this;
     }
