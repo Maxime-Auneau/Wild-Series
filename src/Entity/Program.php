@@ -28,9 +28,6 @@ class Program
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le titre ne peut pas être vide")
      * @Assert\Length(max="255", maxMessage="Stop ton titre est trop long")
-     * @Assert\Regex(
-     *     pattern="/plus\sbelle\sla\svie\g/",
-     *     message="On parle de vraies séries ici")
      */
     private $title;
 
