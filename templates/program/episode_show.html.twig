@@ -1,6 +1,5 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    {% include '_navbar.html.twig' %}
     <h3>Liste des épisodes de la série {{ program.title }} :</h3>
     <h4>Saison {{ season.number }}, Episode {{ episode.number }} : {{ episode.title }}</h4>
     <p>{{ episode.synopsis }}</p>
