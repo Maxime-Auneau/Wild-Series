@@ -58,6 +58,11 @@ class Program
      */
     private $actors;
 
+    /**
+     * @var string
+     */
+    private $slug;
+
     public function __construct()
     {
         $this->seasons = new ArrayCollection();
@@ -172,5 +177,10 @@ class Program
         }
 
         return $this;
+    }
+
+    public function setSlug(string $slug): string
+    {
+       return $this->slug = $slug;
     }
 }
