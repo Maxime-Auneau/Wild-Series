@@ -7,7 +7,7 @@
     <h4>La liste des séries :</h4>
     {% for prog in actor.programs %}
         <diV>
-            <a href="{{ path("program_show", { id: prog.id }) }}">{{ prog.title }}</a>
+            <a href="{{ path("program_show", { slug: prog.slug }) }}">{{ prog.title }}</a>
         </diV>
     {% else %}
     <div>

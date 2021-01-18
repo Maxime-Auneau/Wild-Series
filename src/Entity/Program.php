@@ -59,7 +59,7 @@ class Program
     private $actors;
 
     /**
-     * @var string
+     * @ORM\Column(type="string", length=255)
      */
     private $slug;
 
@@ -179,8 +179,15 @@ class Program
         return $this;
     }
 
-    public function setSlug(string $slug): string
+    public function getSlug(): ?string
     {
-       return $this->slug = $slug;
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
     }
 }

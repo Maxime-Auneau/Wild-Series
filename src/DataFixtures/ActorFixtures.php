@@ -31,8 +31,6 @@ class ActorFixtures extends Fixture implements DependentFixtureInterface
             $actor = new Actor();
             $actor->setName($faker->name);
             $actor->addProgram($this->getReference('program_' . $faker->regexify('[0-5]')));
-            $actor->addProgram($this->getReference('program_' . $faker->regexify('[4-9]')));
-
             $manager->persist($actor);
         }
 

@@ -7,9 +7,15 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker;
+use App\Service\Slugify;
 
 class ProgramFixtures extends Fixture implements DependentFixtureInterface
 {
+    private $slugify;
+    public function __construct(Slugify $slugify)
+    {
+        $this->slugify = $slugify;
+    }
     const PROGRAMS = [
 
         'Walking Dead' => [
@@ -71,18 +77,11 @@ class ProgramFixtures extends Fixture implements DependentFixtureInterface
             $program->setTitle($title);
             $program->setSummary($data['summary']);
             $program->setCategory($this->getReference('category_0'));
+            $slug = $this->slugify->generate($program->getTitle());
+            $program->setSlug($slug);
             $manager->persist($program);
             $this->addReference('program_' . $j, $program);
             $j++;
-        }
-
-        for ($i=6; $i< 10; $i++) {
-            $program = new program();
-            $program->setTitle($faker->text(10));
-            $program->setSummary($faker->text(200));
-            $program->setCategory($this->getReference('category_' . $faker->regexify('[0-5]')));
-            $manager->persist($program);
-            $this->addReference('program_' . $i, $program);
         }
         $manager->flush();
     }
