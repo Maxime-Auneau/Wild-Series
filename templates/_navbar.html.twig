@@ -5,5 +5,11 @@
         <a class="navbar-brand" href="{{ path('program_index') }}">Programs</a>
         <a class="navbar-brand" href="{{ path('category_index') }}">Category</a>
         <a class="navbar-brand" href="{{ path('actor_index') }}">Actors</a>
+        {% if app.user %}
+            <a class="navbar-brand" style="margin-left: auto;" href="{{ path('app_logout') }}">Se déconnecter</a>
+            <span>{{ app.user.email }}</span>
+        {% else %}
+            <a class="navbar-brand" style="margin-left: auto;" href="{{ path('app_login') }}"> Se connecter</a>
+        {% endif %}
     </nav>
 {% endblock %}

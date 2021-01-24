@@ -2,9 +2,12 @@
 // src/Controller/ProgramController.php
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Episode;
 use App\Entity\Season;
+use App\Form\CommentType;
 use App\Form\ProgramType;
+use App\Repository\CommentRepository;
 use App\Service\Slugify;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -101,22 +104,49 @@ class ProgramController extends AbstractController
     }
 
     /**
-     * @Route("/{programSlug}/season/{seasonId}/episode/{episodeSlug}", methods={"GET"}, name="episode_show")
+     * @Route("/{programSlug}/season/{seasonId}/episode/{episodeSlug}", methods={"GET", "POST"}, name="episode_show")
      * @ParamConverter("program", class="App\Entity\Program", options={"mapping" : {"programSlug" : "slug"} })
      * @ParamConverter("season", class="App\Entity\Season", options={"mapping": {"seasonId": "id"}})
      * @ParamConverter("episode", class="App\Entity\Episode", options={"mapping" : {"episodeSlug" : "slug"} })
+     * @param Request $request
      * @param Program $program
      * @param Season $season
      * @param Episode $episode
+     * @param CommentRepository $commentRepository
      * @return Response
      */
-    public function showEpisode(Program $program, Season $season, Episode $episode): Response
+    public function showEpisode(
+        Request $request,
+        Program $program,
+        Season $season,
+        Episode $episode,
+        CommentRepository $commentRepository
+    ): Response
     {
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $user = $this->getUser();
+            $comment->setAuthor($user);
+            $comment->setEpisode($episode);
+
+            $entityManager->persist($comment);
+            $entityManager->flush();
+
+            return $this->redirect($request->server->get('HTTP_REFERER'));
+        }
+
+        $comments = $commentRepository->findBy(['episode' => $episode]);
         return $this->render('program/episode_show.html.twig', [
-            'season' => $season,
             'program' => $program,
-            'episode' => $episode
-        ]);
+            'season' => $season,
+            'episode' => $episode,
+            'form' => $form->createView(),
+            'comments' => $comments]);
     }
 
     /**

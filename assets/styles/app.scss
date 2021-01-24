@@ -7,3 +7,9 @@ $theme-colors: (
 body {
     background-color: lightgrey;
 }
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
