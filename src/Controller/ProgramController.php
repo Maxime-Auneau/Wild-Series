@@ -18,7 +18,8 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use App\Entity\Program;
-
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/programs", name="program_")
@@ -52,6 +53,7 @@ class ProgramController extends AbstractController
      * @param MailerInterface $mailer
      * @return Response
      * @throws TransportExceptionInterface
+     * @IsGranted("ROLE_ADMIN")
      */
     public function new(Request $request, Slugify $slugify, MailerInterface $mailer): Response
     {
@@ -62,6 +64,7 @@ class ProgramController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $slug = $slugify->generate($program->getTitle());
             $program->setSlug($slug);
+            $program->setOwner($this->getUser());
             $entityManager->persist($program);
             $entityManager->flush();
             $email = (new Email())
@@ -72,6 +75,29 @@ class ProgramController extends AbstractController
             return $this->redirectToRoute('program_index');
         }
         return $this->render('program/new.html.twig', ["form" => $form->createView()]);
+    }
+
+    /**
+     * @Route("/{slug}/edit", name="edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param Program $program
+     * @return Response
+     */
+    public function edit(Request $request, Program $program): Response
+    {
+        $form = $this->createForm(ProgramType::class, $program);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+          $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('program_index');
+        }
+
+        return $this->render('program/edit.html.twig', [
+            'program' => $program,
+            'form' => $form->createView(),
+        ]);
     }
 
     /**
